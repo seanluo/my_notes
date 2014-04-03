@@ -84,3 +84,28 @@ func main() {
 	fmt.Println("ok, we are safe to continue.")
 }
 ```
+* golang中的yield方式，采用在生成器函数中向无缓冲管道写入，写入完毕后close管道。消费者for循环中读取管道，当管道close时自动退出循环。
+```golang
+package main
+
+import "fmt"
+
+// 生成器
+func generator(num ...int) <-chan int {
+	c := make(chan int)
+	go func() {
+		for _, v := range num {
+			c <- v
+		}
+		close(c)
+	}()
+	return c
+}
+//消费者
+func main() {
+	gen := generator(1, 1, 2, 3, 5, 8)
+	for n := range gen {
+		fmt.Println(n)
+	}
+}
+```
