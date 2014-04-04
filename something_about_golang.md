@@ -43,7 +43,7 @@ func (w *WaitGroupWrapper) Wrap(cb func()) {
 		w.Done()
 	}()
 }
-	```
+```
 这种方法将`WaitGroup`包装起来，其他的struct中需要等待一系列的goroutine返回时，先生成一个`WaitGroupWrapper`对象，再用该对象的`Wrap`方法包裹要并行且等待的函数，一般是匿名函数的形式。最后调用者通过该对象的`Wait()`方法等待所有函数返回。
 
 ### map类型不是线程安全的。对map数据并发读写时需要加锁。
