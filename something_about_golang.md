@@ -87,7 +87,7 @@ func main() {
 }
 ```
 ### golang中的yield方式。
-1.可以采用在生成器函数中向无缓冲管道写入，写入完毕后close管道。消费者for循环中读取管道，当管道close时自动退出循环。
+1. 可以采用在生成器函数中向无缓冲管道写入，写入完毕后close管道。消费者for循环中读取管道，当管道close时自动退出循环。
 ```golang
 package main
 
