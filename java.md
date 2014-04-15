@@ -12,28 +12,27 @@
 使用intelliJ idea 12的，要在settings》plugins中启用tomcat、maven、spring-webservices插件。
 
 ####问题
-java.lang.IllegalArgumentException at org.springframework.asm.ClassReader.<init>(Unknown Source)
+java.lang.IllegalArgumentException at org.springframework.asm.ClassReader.`<init>`(Unknown Source)
 ...
 这个错误是spring3.2和jdk8的不兼容性问题导致的，换成jdk7就解决了。
 
 ####整理一下那些配置文件
-* tomcat的配置 web.xml
-几个重要标签 
-1. <welcome-file-list>
-2. <servlet> 定义要装载的servlet，有<servlet-name /> <servlet-class /> <init-param /> <load-on-startup />等标签供设置。<init-param />可以有多个，每个内包含<param-name/><param-value/>。通过下面的servlet-mapping，tomcat将部分（或全部）url的处理交给这个servlet，对于Spring MVC来说，就是org.springframework.web.servlet.DispatcherServlet。由Spring MVC分发到具体的Controller。并可以在init-param中指定特定的配置文件路径，默认是servlet-name-servlet.xml
-3. <servlet-mapping> 每个<servlet-name>对应一个<url-pattern>
-4. <filter> 与servlet相似，一般不是请求的最终处理者，做前置处理用。
-5. <filter-mapping> 同上。
-6. <context-param> 全局的上下文，一般用<param-name>contextConfigLocation</param-name> <param-value>classpath:applicationContext.xml</param-value>加载spring的配置。
-7. <session-config> <session-timeout>
+* tomcat的配置 web.xml 几个重要标签 
+1. `<welcome-file-list>`
+2. `<servlet>` 定义要装载的servlet，有`<servlet-name />` `<servlet-class />` `<init-param />` `<load-on-startup />`等标签供设置。`<init-param />`可以有多个，每个内包含`<param-name/>``<param-value/>`。通过下面的servlet-mapping，tomcat将部分（或全部）url的处理交给这个servlet，对于Spring MVC来说，就是org.springframework.web.servlet.DispatcherServlet。由Spring MVC分发到具体的Controller。并可以在init-param中指定特定的配置文件路径，默认是servlet-name-servlet.xml
+3. `<servlet-mapping>` 每个`<servlet-name>`对应一个`<url-pattern>`
+4. `<filter>` 与servlet相似，一般不是请求的最终处理者，做前置处理用。
+5. `<filter-mapping>` 同上。
+6. `<context-param>` 全局的上下文，一般用`<param-name>`contextConfigLocation`</param-name>` `<param-value>`classpath:applicationContext.xml`</param-value>`加载spring的配置。
+7. `<session-config>` `<session-timeout>`
 
 * Spring的配置applicationContext.xml
-1. <context:component-scan base-package="com.xxx" /> 这种用来指定从哪个包里通过注解找Service或者Repository组件等。
-2. <bean> 这是配置各种bean的地方了，像是dataSource，Hibernate，ViewResolver，自定义的DAO等等各种各样的组件，都在这里按照规则声明及配置依赖关系。
+1. `<context:component-scan base-package="com.xxx" />` 这种用来指定从哪个包里通过注解找Service或者Repository组件等。
+2. `<bean>` 这是配置各种bean的地方了，像是dataSource，Hibernate，ViewResolver，自定义的DAO等等各种各样的组件，都在这里按照规则声明及配置依赖关系。
 
 * Spring MVC的配置文件，即tomcat的servlet标签指定的配置文件。默认是servlet-name-servlet.xml。
-1. <context:component-scan base-package="com.xxx" /> 这种用来指定从哪个包里通过注解找Controller等组件。
-2. <bean> 配置viewResolver等等各种各样的组件，这个组件决定了Controller返回的ModelView如何被解析。
-3. <mvc:resources mapping="/image/**" location="/images/" /> 静态文件配置。
+1. `<context:component-scan base-package="com.xxx" />` 这种用来指定从哪个包里通过注解找Controller等组件。
+2. `<bean>` 配置viewResolver等等各种各样的组件，这个组件决定了Controller返回的ModelView如何被解析。
+3. `<mvc:resources mapping="/image/**" location="/images/" />` 静态文件配置。
 
 * 从SpringMVC层就把控制权交给了我们的业务逻辑代码。
