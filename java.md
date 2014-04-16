@@ -36,3 +36,12 @@ java.lang.IllegalArgumentException at org.springframework.asm.ClassReader.`<init
 	3. `<mvc:resources mapping="/image/**" location="/images/" />` 静态文件配置。
 
 * 从SpringMVC层就把控制权交给了我们的业务逻辑代码。
+
+####hibernate
+* hibernate.cfg.xml：hibernate自身的配置，设置了连接字符串，SQL方言等
+* xxx.hbm.xml：映射文件，xml形式声明的数据库存储对象，一般每个配置文件都是对应了一个表。
+* 在applicationContext.xml中
+	* 用dataSource的bean来利用自身的数据库连接配置让spring加载hibernate
+	* 用seesionFactory的bean中注入dataSource并设置hibernate session的一些属性，也指定了加载哪些hbm.xml
+	* transactionManager，事务管理，要装配sessionFactory
+	* 各种DAO.java，service.java生成的对象，在这里注册并把sessionFactory装配进去
