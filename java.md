@@ -37,7 +37,7 @@ java.lang.IllegalArgumentException at org.springframework.asm.ClassReader.`<init
 
 * 从SpringMVC层就把控制权交给了我们的业务逻辑代码。
 
-####hibernate
+####Hibernate
 * hibernate.cfg.xml：hibernate自身的配置，设置了连接字符串，SQL方言等
 * xxx.hbm.xml：映射文件，xml形式声明的数据库存储对象，一般每个配置文件都是对应了一个表。
 * 在applicationContext.xml中
@@ -45,3 +45,9 @@ java.lang.IllegalArgumentException at org.springframework.asm.ClassReader.`<init
 	* 用seesionFactory的bean中注入dataSource并设置hibernate session的一些属性，也指定了加载哪些hbm.xml
 	* transactionManager，事务管理，要装配sessionFactory
 	* 各种DAO.java，service.java生成的对象，在这里注册并把sessionFactory装配进去
+* 映射文件xxx.hbm.xml, 存储对象xxx.java都可以用已有的数据库和数据表生成。
+* DAO里面封装基本的操作，增删改查。由于Hibernate必须有事务，所以在DAO的操作或者更上层的service中使用@Transactional注解。
+
+####Spring的注解
+* @Component类型，细分还有@Service对应业务层，@Controller对应控制路由层，@Repository对应于数据组件如DAO。
+* @Autowired @Resource注解用于自动装配，Autowired使用byType方式查找，Resource使用byName方式查找。
