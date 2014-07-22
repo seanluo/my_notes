@@ -151,4 +151,36 @@ func main() {
 ```golang
 import "github.com/seanluo/my/package"
 ```
-引入的包，可以用`go get`的形式获取到。不宜采用本地的相对路径的形式，如`import my/package`，因为这种形式的引入必须手动将包路径添加到`$GOPATH`中去。
+引入的包，可以用`go get`的形式获取到。不宜采用本地的相对路径的形式，如`import my/package`，这种形式并非不可以，只是有可能引发命名冲突。
+
+### Go的工程结构组织
+Go的工程需要一个目录作为其workspace，而且该目录要加入到GOPATH中区。例如该目录为`/home/dev/go`，则其下面的组织形式为：
+```
+go/
+	bin/
+	    streak                         # command executable
+	    todo                           # command executable
+	pkg/
+	    linux_amd64/
+	        code.google.com/p/goauth2/
+	            oauth.a                # package object
+	        github.com/nf/todo/
+	            task.a                 # package object
+	src/
+	    code.google.com/p/goauth2/
+	        .hg/                       # mercurial repository metadata
+	        oauth/					   # 这个项目包本身只作为库使用，是一个顶级项目oauth
+	            oauth.go               # package source
+	            oauth_test.go          # test source
+	    github.com/nf/
+	        streak/
+	            .git/                  # git repository metadata
+	            oauth.go               # command source
+	            streak.go              # command source
+	        todo/
+	            .git/                  # git repository metadata
+	            task/				   # 这个包是某个main包需要的，是todo项目下的一个子项目todo/task，和main包一个层次
+	                task.go            # package source
+	            todo.go                # command source
+```
+切换到workspace路径下，执行`go install github.com/nf/todo`会在pkg下编译出task.a静态库，在bin下编译出todo可执行文件。库文件是有项目前缀和不同深度的，可执行文件是平坦的置于bin中。
